@@ -3,18 +3,41 @@ TweenMax.set("#clock", {perspective:1500, scale:0.7125})
 TweenMax.set(".upper", {rotationX:0.01, transformOrigin:"50% 100%"})
 TweenMax.set(".lower", {rotationX:0.01, transformOrigin:"50% 0%"})
 
+let getParameters = function (key, defaultValue) {
+  // https://www.sitepoint.com/get-url-parameters-with-javascript/
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  let value = urlParams.get(key)
+  if ((!value || value === '') && defaultValue !== undefined) {
+    value = defaultValue
+  }
+  return value
+}
+
+let hr = getParameters('hr', 24)
+let showSeconed = getParameters('ss', true)
+
 // set clock
 var t, ss, mm, hh;
 setTimeVars();
 function setTimeVars(){
   t = new Date();
-  t = new Date();
+  // t = new Date();
 	ss = String(t.getSeconds());
   mm = String(t.getMinutes());
-  hh = String( (t.getHours()>12) ? t.getHours()-12 : t.getHours() );
+  if (hr === '12') {
+    hh = String( (t.getHours()>12) ? t.getHours()-12 : t.getHours() );
+  }
+  else {
+    hh = t.getHours() + ''
+  }
   if (ss.length==1) ss = "0"+ss;
   if (mm.length==1) mm = "0"+mm;
   if (hh.length==1) hh = "0"+hh;
+}
+
+if (showSeconed === false || showSeconed === 'false') {
+  document.getElementById('second').style.display= 'none'
 }
 
 h10.childNodes[3].innerHTML = h10.childNodes[7].innerHTML = "<span>"+Number(hh.substr(0,1))+"</span>";
